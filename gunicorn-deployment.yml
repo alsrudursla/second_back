@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: gunicorn-deployment-prod
+ namespace: lmk-dev
+spec:
+ selector:
+   matchLabels:
+    type: back
+ replicas: 1
+ template:
+   metadata:
+     labels:
+       type: back
+   spec:
+    containers:
+    - name: container
+      image: nuy0307/second_back:latest
+      command: ["/bin/sh", "-ec", "python manage.py migrate && gunicorn config.wsgi --bind 0.0.0.0:8000"]
+      ports:
+      - containerPort: 8000
